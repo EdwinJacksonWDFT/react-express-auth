@@ -7,7 +7,7 @@ import api from './util/api';
 class App extends Component {
   state = {
     name: '',
-    token: ''
+    savedToken: false
   }
 
   componentDidMount() {
@@ -20,9 +20,9 @@ class App extends Component {
       }
       axios.get(api('/user/settings'), config)
         .then(response => {
-          console.log(response);
           this.setState({
-            name: response.data.username
+            name: response.data.username,
+            savedToken: true
           });
         })
         .catch(error => {
@@ -47,20 +47,25 @@ class App extends Component {
     event.target.reset();
   }
 
+  logout = (e) => {
+    this.props.cookies.remove('jwt');
+    this.setState({ savedToken: false });
+  }
+
   render() {
     return (
       <div className="app">
         <h1 className="title">Token Authentication</h1>
         {
-          this.state.name && (
+          this.state.savedToken && (
+            <>
               <h2>Hello, {this.state.name}</h2>
-            // <>
-            //   <button onClick={(e) => { this.props.cookies.remove('jwt') }}>Logout</button>
-            // </>
+              <button onClick={this.logout}>Logout</button>
+            </>
           )
         }
         {
-          !this.state.name &&
+          !this.state.savedToken &&
           <form className="login-form" onSubmit={this.sendCredentials}>
             <input type="text" name="username" />
             <input type="password" name="password" />
