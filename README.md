@@ -16,6 +16,11 @@ optional:
 
 notice how the application is different from the first time you loaded up
 
+## Prerequisites
+- Node JS + NPM
+- Create React App
+- Nodemon (globally installed)
+
 ## Front-end implementation
 
 Conceptually, we need to fetch a token from the back-end and save it in our localstorage in the browser. In order to do this we need to get access to our cookies inside of React. The easy way to do this is to use the `<CookieParser>` react component. 
@@ -38,6 +43,27 @@ ReactDOM.render(
 );
 ...
 ```
+Then inside of App, were going to use the `withCookies` higher order function to pass the `cookies` prop to our component! This is done simply by passing the 
+```javascript
+import React, { Component } from 'react';
+import { withCookies } from 'react-cookie'; // 1. import withCookies
+import './App.css';
+
+class App extends Component {
+  state = {
+    name: '',
+    savedToken: false
+  }
+
+  render() {
+    ...
+  }
+}
+
+export default withCookies(App); // 2. withCookies adds the 'cookies' prop
+
+```
+
 now your App component will receive a prop called `cookies` with several methods on it. You can view those methods in the [react-cookie docs](https://github.com/reactivestack/cookies/tree/9ef292c706eaeb3baf6f6e60189f2105c8d6f0b0/packages/react-cookie)
 
 Inside of our App component we're going to check the local storage for the token!
